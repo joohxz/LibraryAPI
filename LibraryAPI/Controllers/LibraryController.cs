@@ -16,7 +16,23 @@ namespace LibraryAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult GetBooks() => Ok("Books");
+        public ActionResult<IEnumerable<Book>> GetAllBooks()
+        {
+            var books = _bookService.GetAll();
+            return Ok(books);
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult GetBook(Guid id)
+        {
+            var book = _bookService.GetById(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -26,12 +42,24 @@ namespace LibraryAPI.Controllers
             return Created();
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public ActionResult UpdateBook() => NoContent();
+        public ActionResult UpdateBook(Guid id, [FromBody] Book updatedBook)
+        {
+            var book = _bookService.UpdateBook(id, updatedBook);
+            return NoContent();
+        }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public ActionResult DeleteBook() => NoContent();
+        public ActionResult DeleteBook(Guid id)
+        {
+            var result = _bookService.DeleteBook(id);
+            if (!result)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
     }
 }
