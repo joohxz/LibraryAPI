@@ -1,30 +1,37 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using LibraryAPI.Models;
+using LibraryAPI.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryAPI.Controllers
 {
     public class LibraryController : LibraryBaseController
     {
+        private readonly IBookService _bookService;
 
-        [HttpGet("test-api")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult Get() => Ok("Testando");
-
+        public LibraryController(IBookService bookservice)
+        {
+            _bookService = bookservice;
+        }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetBooks() => Ok("Books");
+        public ActionResult GetBooks() => Ok("Books");
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public IActionResult CreateBook() => Created();
+        public ActionResult CreateBook([FromBody] Book book)
+        {
+            var createdBook = _bookService.CreateBook(book);
+            return Created();
+        }
 
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public IActionResult UpdateBook() => NoContent();
+        public ActionResult UpdateBook() => NoContent();
 
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public IActionResult DeleteBook() => NoContent();
+        public ActionResult DeleteBook() => NoContent();
     }
 }
