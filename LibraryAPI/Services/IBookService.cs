@@ -7,7 +7,7 @@ namespace LibraryAPI.Services
         Book CreateBook(Book book);
         Book GetById(Guid id);
         IEnumerable<Book> GetAll();
-        bool UpdateBook(Guid id);
+        bool UpdateBook(Guid id, Book updatedBook);
         bool DeleteBook(Guid id);
 
     }
